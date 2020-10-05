@@ -2,10 +2,17 @@ package RT;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.audio.Music;
+
+import java.io.File;
+
+import static com.badlogic.gdx.utils.JsonValue.ValueType.object;
+
 
 public class RecorderScreen extends BaseScreen {
 
@@ -16,23 +23,41 @@ public class RecorderScreen extends BaseScreen {
     TextButton loadButton;
     TextButton recordButton;
     TextButton saveButton;
+    FileHandle musicFile;
+    Skin skin;
 
     @Override
     public void initialize() {
 
         recording = false;
-
+        skin = new Skin();
+        skin.add("space", new Texture("assets/space.png"));
         loadButton = new TextButton("Load Music File", BaseGame.textButtonStyle);
         loadButton.addListener(
                 (Event e) -> {
                     if (!isTouchDownEvent(e))
                         return false;
 
-                    FileHandle musicFile = FileUtils.showOpenDialog();
+                    FileChooser files = new FileChooser("Choose music file", skin) {
+
+                        @Override
+                        protected void result(Object object) {
+                            if (object.equals("OK")) {
+                                musicFile = getFile();
+                            }
+                        }
+                    };
+
+
+
+//                    FileHandle musicFile = FileUtils.showOpenDialog();
+
+//                    File openFile = SynchronousJFXFileChooser.showOpenDialog();
+//                    FileHandle musicFile = new FileHandle(openFile);
 
                     if ( musicFile != null ) {
 
-                        music = Gdx.audio.newMusic(musicFile);
+                        music = Gdx.audio.newMusic((musicFile));
                         songData = new SongData();
                         songData.setSongName( musicFile.name() );
                     }
