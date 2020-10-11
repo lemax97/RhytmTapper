@@ -10,6 +10,8 @@ dependencies {
 	implementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
 	implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
 	implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
+	compile "net.spookygames.gdx:gdx-nativefilechooser-desktop:1.0.0"
+
 }
 
 import org.gradle.internal.os.OperatingSystem

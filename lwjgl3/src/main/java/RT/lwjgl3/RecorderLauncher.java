@@ -5,6 +5,7 @@ package RT.lwjgl3;
 import RT.RecorderGame;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
+import net.spookygames.gdx.nativefilechooser.desktop.DesktopFileChooser;
 
 /** Launches the desktop (LWJGL3) application. */
 public class RecorderLauncher {
@@ -13,7 +14,7 @@ public class RecorderLauncher {
     }
 
     private static Lwjgl3Application createApplication() {
-        return new Lwjgl3Application(new RecorderGame(), getDefaultConfiguration());
+        return new Lwjgl3Application(new RecorderGame(new DesktopFileChooser()), getDefaultConfiguration());
     }
 
     private static Lwjgl3ApplicationConfiguration getDefaultConfiguration() {

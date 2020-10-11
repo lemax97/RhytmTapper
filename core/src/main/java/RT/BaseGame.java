@@ -14,6 +14,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
+import net.spookygames.gdx.nativefilechooser.NativeFileChooser;
+import net.spookygames.gdx.nativefilechooser.NativeFileChooserConfiguration;
+
+import java.io.File;
+import java.io.FilenameFilter;
 
 public abstract class BaseGame extends Game{
 
@@ -26,7 +31,6 @@ public abstract class BaseGame extends Game{
     public static Skin skin;
 
     public BaseGame() {
-
         skin = new Skin();
         game = this;
     }
@@ -61,6 +65,8 @@ public abstract class BaseGame extends Game{
         // prepare for multiple classes/stages to receive discrete input
         InputMultiplexer inputMultiplexer = new InputMultiplexer();
         Gdx.input.setInputProcessor(inputMultiplexer);
+
+
     }
 
     public static void setActiveScreen(RT.BaseScreen screen){

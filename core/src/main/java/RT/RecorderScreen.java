@@ -8,8 +8,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.audio.Music;
+import net.spookygames.gdx.nativefilechooser.NativeFileChooser;
+import net.spookygames.gdx.nativefilechooser.NativeFileChooserCallback;
+import net.spookygames.gdx.nativefilechooser.NativeFileChooserConfiguration;
 
 import java.io.File;
+import java.io.FilenameFilter;
 
 import static com.badlogic.gdx.utils.JsonValue.ValueType.object;
 
@@ -25,42 +29,69 @@ public class RecorderScreen extends BaseScreen {
     TextButton saveButton;
     FileHandle musicFile;
     Skin skin;
+    NativeFileChooser fileChooser;
+
+    public RecorderScreen(NativeFileChooser fileChooser) {
+        super();
+        this.fileChooser = fileChooser;
+    }
 
     @Override
     public void initialize() {
 
+        //configure file chooser
+        NativeFileChooserConfiguration configuration = new NativeFileChooserConfiguration();
+
+        //starting from user dir
+        configuration.directory = Gdx.files.absolute(System.getProperty("user.home"));
+
+        configuration.mimeFilter = "audio/*";
+        configuration.nameFilter = new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String name) {
+                return name.endsWith("mp3");
+            }
+        };
+
+        // Add a nice title
+        configuration.title = "Choose audio file";
+
         recording = false;
-        skin = new Skin();
-        skin.add("space", new Texture("assets/space.png"));
         loadButton = new TextButton("Load Music File", BaseGame.textButtonStyle);
         loadButton.addListener(
                 (Event e) -> {
                     if (!isTouchDownEvent(e))
                         return false;
 
-                    FileChooser files = new FileChooser("Choose music file", skin) {
-
-                        @Override
-                        protected void result(Object object) {
-                            if (object.equals("OK")) {
-                                musicFile = getFile();
-                            }
-                        }
-                    };
-
-
-
 //                    FileHandle musicFile = FileUtils.showOpenDialog();
 
-//                    File openFile = SynchronousJFXFileChooser.showOpenDialog();
-//                    FileHandle musicFile = new FileHandle(openFile);
+                    fileChooser.chooseFile(configuration, new NativeFileChooserCallback() {
+                        @Override
+                        public void onFileChosen(FileHandle musicFile) {
+                            if ( musicFile != null ) {
+                                music = Gdx.audio.newMusic((musicFile));
+                                songData = new SongData();
+                                songData.setSongName( musicFile.name() );
+                            }
+                        }
 
-                    if ( musicFile != null ) {
+                        @Override
+                        public void onCancellation() {
 
-                        music = Gdx.audio.newMusic((musicFile));
-                        songData = new SongData();
-                        songData.setSongName( musicFile.name() );
-                    }
+                        }
+
+                        @Override
+                        public void onError(Exception exception) {
+
+                        }
+                    });
+
+//                    if ( musicFile != null ) {
+
+//                        music = Gdx.audio.newMusic((musicFile));
+//                        songData = new SongData();
+//                        songData.setSongName( musicFile.name() );
+//                    }
 
                     return true;
                 }
@@ -89,7 +120,9 @@ public class RecorderScreen extends BaseScreen {
                     if ( !isTouchDownEvent(e) )
                         return false;
 
-                    FileHandle textFile = FileUtils.showSaveDialog();
+//                    FileHandle textFile = FileUtils.showSaveDialog();
+
+                    FileHandle textFile = new FileHandle("record.txt");
 
                     if ( textFile != null )
                         songData.writeToFile(textFile);

@@ -3,7 +3,8 @@ buildscript {
 		mavenLocal()
 		mavenCentral()
 		google()
-		maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+		maven {	url 'https://oss.sonatype.org/content/repositories/snapshots/'}
+		maven {	url "http://dl.bintray.com/spookygames/oss"	}
 		jcenter()
 	}
 	dependencies {
@@ -32,6 +33,7 @@ subprojects {
 		mavenCentral()
 		maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
 		maven { url 'https://jitpack.io' }
+		maven { url "http://dl.bintray.com/spookygames/oss" }
 		jcenter()
 	}
 }
